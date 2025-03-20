@@ -2,9 +2,11 @@ package com.example.demo.controller;
 
 
 import com.example.demo.domain.Address;
+import com.example.demo.domain.SelfResponse;
 import com.example.demo.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.demo.service.UserService;
 
@@ -12,10 +14,13 @@ import com.example.demo.service.UserService;
 @RequestMapping("/UserManaging")
 public class UserController {
 
+
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
-
-
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping("/saveUser")
     public User saveUser(@RequestBody User user) {
@@ -24,26 +29,28 @@ public class UserController {
     }
 
     @GetMapping("/getPassword/{username}")
-    public String getPassword(@PathVariable String username){
-        return userService.getPasswordByUsername(username);
+    public ResponseEntity<Object> getPassword(@PathVariable String username){
+        return new ResponseEntity<>(userService.getPasswordByUsername(username), HttpStatus.OK);
     }
 
     @GetMapping("/getAllInfo/{userId}")
-    public User getAllInfo(@PathVariable Long userId) {
-        return userService.findById(userId);
+    public ResponseEntity<Object> getAllInfo(@PathVariable Long userId) {
+        return new ResponseEntity<>(userService.findById(userId), HttpStatus.OK);
     }
 
-
-//    //از این برای اپدیت کردن و ویرایش اطلاعات کاربران استفاده میشه در واقعیت ؟
     @PatchMapping("/updateFields/{id}")
-    public void updateUser(@PathVariable Long id,@RequestBody User user) {
-
-        userService.updateUser(id ,user);
+    public ResponseEntity<Object> updateUser(@PathVariable Long id,@RequestBody User user) {
+        return new ResponseEntity<>(userService.updateUser(id ,user), HttpStatus.OK);
     }
 
+//    @ResponseBody
     @PatchMapping("/addAddress/{id}")
-    public void addAddress(@PathVariable Long id,@RequestBody Address address) {
+    public ResponseEntity<Object> addAddress(@PathVariable Long id,@RequestBody Address address) {
         userService.addAddressById(id,address);
+        return new ResponseEntity<>(
+                userService.getSelfResponse(
+                        "address successfully added","controller address method "), HttpStatus.CREATED);
+//این کار درسته که تو کنترلر بیایم از دامینمون استفاده کنیم ؟
     }
 
     @PatchMapping("/updateAddress/{userId}")
@@ -51,14 +58,15 @@ public class UserController {
         userService.updateAddress(userId,address);
     }
 
-    @PatchMapping("/acceptUser/{adminId}/{userId}")
-    public void acceptUser(@PathVariable Long adminId,@PathVariable Long userId) {
-        userService.acceptUserById(adminId,userId);
-    }
-
+//در واقعیت وقتی که کاربری وارد اکانتش میشود نباید تمامی اطلاعاتش از دیتابی فچ شود ؟یعنی نباید خروجی متد زیر یک یوزر دی تی او باشد ؟
     @GetMapping("/signIn/{username}/{password}")
     public String signIn(@PathVariable String username, @PathVariable String password) {
         return userService.signIn(username,password);
+    }
+
+    @DeleteMapping("/deleteAccount/{id}")
+    public void deleteAccount(@PathVariable Long id){
+        userService.deleteUserById(id);
     }
 
 
