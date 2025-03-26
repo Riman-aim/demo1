@@ -1,8 +1,9 @@
-package com.example.demo.cifiguration;
+package com.example.demo.configuration;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 
 @Configuration
 public class ModelMapperConfig {
@@ -11,3 +12,4 @@ public class ModelMapperConfig {
         return new ModelMapper();
     }
 }
+

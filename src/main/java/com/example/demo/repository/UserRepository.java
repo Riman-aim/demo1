@@ -14,20 +14,16 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    Optional<User> findByUsername(String username);
-
-    Long getUserIdByUsername(String username);
-
     @Query("select u.password from User u where u.username =:username")
     Optional<String> getPasswordByUsername(@Param("username") String username);
 
     boolean existsByUsername(@Param("username") String username);
 
     @Query("select case when u.password=:password then true else false end from User u where u.username=:username")
-    boolean isCorrectPassword(@Param("username") String username,@Param("password") String password);
+    boolean isCorrectPassword(@Param("username") String username, @Param("password") String password);
 
-    @Query("select u from User u where u.id =:id and u.isAccepted=true   ")
-    Optional<User> isAcceptedByUserId(@Param("id") Long userId);
+    @Query("select case when u.isAccepted=true then true else false end from User u where u.id=:id")
+    boolean isAcceptedByUserId(@Param("id") Long userId);
 
     @Modifying
     @Transactional
@@ -36,4 +32,17 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select u from User u where u.isAccepted=false ")
     List<User> getNotAcceptedUsers();
+
+    @Query("select u from User u where u.isAddressDeleted=true ")
+    List<User> getAddressDeletedUsers();
+
+//    @Query("select case when u.username=:username then true else false end from User u")
+//    boolean isDuplicateUsername(@Param("username") String username);
+
+    @Query("SELECT case when exists(select 1 from User u where u.username=:username) then true end ")
+    boolean isDuplicateUsername(@Param("username") String username);
+
+    @Query("select case when exists (select 1 from User u where u.phoneNumber=:phoneNumber) then true  end ")
+    boolean isDuplicatePhoneNumber(@Param("phoneNumber") String phoneNumber);
+
 }

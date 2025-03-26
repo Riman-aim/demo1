@@ -1,8 +1,6 @@
 package com.example.demo.dto.userdto;
 
-import jakarta.persistence.Column;
-
-public class UserDTO {
+public class UserDtoShow {
 
     private String firstname;
 
@@ -12,7 +10,17 @@ public class UserDTO {
 
     private String phoneNumber;
 
-    public UserDTO() {}
+    private boolean isAccepted;
+
+    public UserDtoShow() {}
+
+    public boolean isAccepted() {
+        return isAccepted;
+    }
+
+    public void setAccepted(boolean accepted) {
+        isAccepted = accepted;
+    }
 
     public String getFirstname() {
         return firstname;
