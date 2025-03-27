@@ -1,6 +1,8 @@
 package com.example.demo.dto.userdto;
 
 public class UserGetRequest {
+
+
     String firstname;
     String lastname;
     String phoneNumber;

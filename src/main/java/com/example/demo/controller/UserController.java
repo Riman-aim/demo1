@@ -6,7 +6,9 @@ import com.example.demo.dto.response.SelfResponse;
 import com.example.demo.domain.User;
 import com.example.demo.dto.userdto.UserDtoShow;
 import com.example.demo.dto.userdto.UserGetRequest;
+import com.example.demo.dto.userdto.UserSaveRequest;
 import com.example.demo.dto.userdto.UserSaveResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +28,7 @@ public class UserController {
 
     @PostMapping("/saveUser")
     @ResponseStatus(HttpStatus.CREATED)
-    public UserSaveResponse saveUser(@RequestBody User user) {
+    public UserSaveResponse saveUser( @Valid @RequestBody UserSaveRequest user) {
         return userService.save(user) ;
     }
 

@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 
 import com.example.demo.dto.userdto.UserGetRequest;
+import com.example.demo.dto.userdto.UserSaveRequest;
 import com.example.demo.dto.userdto.UserSaveResponse;
 import com.example.demo.exception.*;
 import com.example.demo.convertor.UserConvertor;
@@ -38,15 +39,16 @@ public class UserService {
     }
 
 
-    public UserSaveResponse save(User user) {
+    public UserSaveResponse save(UserSaveRequest user) {
 
         if (!userRepository.isDuplicateUsername(user.getUsername())) {
             if (!userRepository.isDuplicatePhoneNumber(user.getPhoneNumber())) {
-                user.setAddressDeleted(false);
-                user.setAccepted(false);
-                user.setAdmin(false);
-                userRepository.save(user);
-                return userConvertor.UserToUserSaveResponse(user);
+                User user1=userConvertor.UserSaveRequestToUSer(user);
+                user1.setAddressDeleted(false);
+                user1.setAccepted(false);
+                user1.setAdmin(false);
+                userRepository.save(user1);
+                return userConvertor.UserToUserSaveResponse(user1);
             } else {
                 throw new DuplicatePhoneNumberException("phone number is already taken by phone number " + user.getPhoneNumber());
             }

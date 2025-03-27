@@ -4,6 +4,7 @@ package com.example.demo.convertor;
 import com.example.demo.domain.User;
 import com.example.demo.dto.userdto.UserDtoShow;
 import com.example.demo.dto.userdto.UserGetRequest;
+import com.example.demo.dto.userdto.UserSaveRequest;
 import com.example.demo.dto.userdto.UserSaveResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,5 +37,8 @@ public class UserConvertor {
         return modelMapper.map(user, UserGetRequest.class);
     }
 
+    public User UserSaveRequestToUSer(UserSaveRequest userSaveRequest) {
+        return modelMapper.map(userSaveRequest, User.class);
+    }
 
 }

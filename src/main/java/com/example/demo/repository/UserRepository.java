@@ -39,10 +39,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 //    @Query("select case when u.username=:username then true else false end from User u")
 //    boolean isDuplicateUsername(@Param("username") String username);
 
-    @Query("SELECT case when exists(select 1 from User u where u.username=:username) then true end ")
+    @Query("SELECT case when exists(select 1 from User u where u.username=:username) then true else false end ")
     boolean isDuplicateUsername(@Param("username") String username);
 
-    @Query("select case when exists (select 1 from User u where u.phoneNumber=:phoneNumber) then true  end ")
+    @Query("select case when exists (select 1 from User u where u.phoneNumber=:phoneNumber) then true  else false end ")
     boolean isDuplicatePhoneNumber(@Param("phoneNumber") String phoneNumber);
 
 }
