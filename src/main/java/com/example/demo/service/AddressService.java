@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.Exception.AddressNotFoundException;
+import com.example.demo.exception.AddressNotFoundException;
 import com.example.demo.domain.Address;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,8 +9,13 @@ import com.example.demo.repository.AddressRepository;
 @Service
 public class AddressService {
 
-    @Autowired
+
     private AddressRepository addressRepository;
+
+    @Autowired
+    public AddressService(AddressRepository addressRepository) {
+        this.addressRepository = addressRepository;
+    }
 
     public void updateAddress(Long addressId, Address address) {
         Address address1 = addressRepository.findById(addressId).orElseThrow

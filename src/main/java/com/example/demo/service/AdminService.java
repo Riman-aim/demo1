@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.Exception.UserNotFoundException;
+import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.domain.User;
 import com.example.demo.repository.AdminRepository;
 import org.springframework.beans.factory.annotation.Autowired;

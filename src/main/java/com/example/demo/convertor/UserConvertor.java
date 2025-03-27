@@ -2,7 +2,10 @@ package com.example.demo.convertor;
 
 
 import com.example.demo.domain.User;
-import com.example.demo.dto.userdto.UserDTO;
+import com.example.demo.dto.userdto.UserDtoShow;
+import com.example.demo.dto.userdto.UserGetRequest;
+import com.example.demo.dto.userdto.UserSaveRequest;
+import com.example.demo.dto.userdto.UserSaveResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,17 +13,32 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserConvertor {
 
-    @Autowired
-    private ModelMapper modelMapper;
 
-    public UserDTO userToUserDTO(User user) {
-        return modelMapper.map(user, UserDTO.class);
+    private final ModelMapper modelMapper;
+
+    @Autowired
+    public UserConvertor(ModelMapper modelMapper) {
+        this.modelMapper = modelMapper;
     }
 
-    public User userDTOToUser(UserDTO userDTO) {
+    public UserDtoShow userToUserDTO(User user) {
+        return modelMapper.map(user, UserDtoShow.class);
+    }
+
+    public User userDtoToUser(UserDtoShow userDTO) {
         return modelMapper.map(userDTO, User.class);
     }
 
+    public UserSaveResponse UserToUserSaveResponse(User user) {
+        return modelMapper.map(user, UserSaveResponse.class);
+    }
 
+    public UserGetRequest UserToUserGetRequest(User user) {
+        return modelMapper.map(user, UserGetRequest.class);
+    }
+
+    public User UserSaveRequestToUSer(UserSaveRequest userSaveRequest) {
+        return modelMapper.map(userSaveRequest, User.class);
+    }
 
 }

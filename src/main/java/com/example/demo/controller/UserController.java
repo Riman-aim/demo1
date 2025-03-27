@@ -2,11 +2,15 @@ package com.example.demo.controller;
 
 
 import com.example.demo.domain.Address;
-import com.example.demo.domain.SelfResponse;
+import com.example.demo.dto.response.SelfResponse;
 import com.example.demo.domain.User;
+import com.example.demo.dto.userdto.UserDtoShow;
+import com.example.demo.dto.userdto.UserGetRequest;
+import com.example.demo.dto.userdto.UserSaveRequest;
+import com.example.demo.dto.userdto.UserSaveResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.demo.service.UserService;
 
@@ -23,53 +27,63 @@ public class UserController {
     }
 
     @PostMapping("/saveUser")
-    public User saveUser(@RequestBody User user) {
-        userService.save(user);
-        return user;
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserSaveResponse saveUser( @Valid @RequestBody UserSaveRequest user) {
+        return userService.save(user) ;
     }
 
     @GetMapping("/getPassword/{username}")
-    public ResponseEntity<Object> getPassword(@PathVariable String username){
-        return new ResponseEntity<>(userService.getPasswordByUsername(username), HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+    public String getPassword(@PathVariable String username) {
+        return userService.getPasswordByUsername(username);
     }
 
     @GetMapping("/getAllInfo/{userId}")
-    public ResponseEntity<Object> getAllInfo(@PathVariable Long userId) {
-        return new ResponseEntity<>(userService.findById(userId), HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+    public UserGetRequest getAllInfo(@PathVariable Long userId) {
+        return(userService.findById(userId));
     }
 
     @PatchMapping("/updateFields/{id}")
-    public ResponseEntity<Object> updateUser(@PathVariable Long id,@RequestBody User user) {
-        return new ResponseEntity<>(userService.updateUser(id ,user), HttpStatus.OK);
+    public UserDtoShow updateUser(@PathVariable Long id, @RequestBody User user) {
+        return userService.updateUser(id, user);
     }
 
-//    @ResponseBody
     @PatchMapping("/addAddress/{id}")
-    public ResponseEntity<Object> addAddress(@PathVariable Long id,@RequestBody Address address) {
-        userService.addAddressById(id,address);
-        return new ResponseEntity<>(
-                userService.getSelfResponse(
-                        "address successfully added","controller address method "), HttpStatus.CREATED);
-//این کار درسته که تو کنترلر بیایم از دامینمون استفاده کنیم ؟
+    @ResponseStatus(HttpStatus.CREATED)
+    public SelfResponse addAddress(@PathVariable Long id, @RequestBody Address address) {
+        userService.addAddressById(id, address);
+        return new SelfResponse("address added by userID : " + id, "success");
+
     }
 
     @PatchMapping("/updateAddress/{userId}")
-    public void updateAddress(@PathVariable Long userId,@RequestBody Address address) {
-        userService.updateAddress(userId,address);
+    @ResponseStatus(HttpStatus.OK)
+    public SelfResponse updateAddress(@PathVariable Long userId, @RequestBody Address address) {
+        userService.updateAddress(userId, address);
+        return (new SelfResponse("address updated by userID : " + userId, "success"));
     }
 
-//در واقعیت وقتی که کاربری وارد اکانتش میشود نباید تمامی اطلاعاتش از دیتابی فچ شود ؟یعنی نباید خروجی متد زیر یک یوزر دی تی او باشد ؟
     @GetMapping("/signIn/{username}/{password}")
-    public String signIn(@PathVariable String username, @PathVariable String password) {
-        return userService.signIn(username,password);
+    @ResponseStatus(HttpStatus.OK)
+    public SelfResponse signIn(@PathVariable String username, @PathVariable String password) {
+        userService.signIn(username, password);
+        return (new SelfResponse("welcome user by username : " + username, "success"));
     }
 
     @DeleteMapping("/deleteAccount/{id}")
-    public void deleteAccount(@PathVariable Long id){
+    @ResponseStatus(HttpStatus.OK)
+    public SelfResponse deleteAccount(@PathVariable Long id) {
         userService.deleteUserById(id);
+        return (new SelfResponse("account deleted", "success"));
     }
 
-
+    @PatchMapping("/deleteAddress/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public SelfResponse deleteAddress(@PathVariable Long id) {
+        userService.deleteAddressByUserId(id);
+        return(new SelfResponse("address deleted", "success"));
+    }
 
 
 }

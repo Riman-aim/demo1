@@ -8,11 +8,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
-
 @Entity
 @Table(name = "users")
 public class User {
-
 
 
     @Id
@@ -25,16 +23,19 @@ public class User {
     @Column(name = "last-name")
     private String lastname;
 
-    @Column(name = "user-name", unique = true)
+    @Column(name = "user-name", unique = true, nullable = false)
     private String username;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "is-accepted")
     private boolean isAccepted;
 
-    @Column(name = "phone-number", unique = true, length = 11)
+    @Column(name = "is-address-deleted")
+    private boolean isAddressDeleted;
+
+    @Column(name = "phone-number", unique = true, length = 11, nullable = false)
     private String phoneNumber;
 
     @Column(name = "is_admin")
@@ -43,15 +44,24 @@ public class User {
     @OneToOne(cascade = CascadeType.ALL)
     private Address address;
 
-    public User(){}
+    public User() {
+    }
 
-    public User(Long id, String firstname, String lastname, String username, String password,  String phoneNumber) {
+    public User(Long id, String firstname, String lastname, String username, String password, String phoneNumber) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.username = username;
         this.password = password;
         this.phoneNumber = phoneNumber;
+    }
+
+    public boolean isAddressDeleted() {
+        return isAddressDeleted;
+    }
+
+    public void setAddressDeleted(boolean addressDeleted) {
+        isAddressDeleted = addressDeleted;
     }
 
     public Long getId() {
